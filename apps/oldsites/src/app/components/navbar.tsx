@@ -21,47 +21,39 @@ import {
   CloseIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  DragHandleIcon,
 } from "@chakra-ui/icons";
+
+const MainIcon = () => {
+  return (
+    <Stack direction={"row"}>
+      <Flex alignItems={"center"}>
+        <DragHandleIcon />
+        <Text marginLeft={"3px"} justifySelf={"center"}>
+          Manager
+        </Text>
+      </Flex>
+    </Stack>
+  );
+};
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
     <Box>
-      <Flex
-        bg={"white"}
-        color={"fc"}
-        minH={"50px"}
-        px={{ base: 3 }}
-        align={"center"}
-      >
-        <Flex
-          flex={{ base: 1, md: "auto" }}
-          ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}
-        >
-          <IconButton
-            onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
-            variant={"ghost"}
-            aria-label={"Toggle Navigation"}
-          />
-        </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
-            color={"fc"}
-          >
-            Logo
-          </Text>
-        </Flex>
-
-        <Flex display={{ base: "none", md: "flex" }} ml={10}>
-          <DesktopNav />
-        </Flex>
+      <Flex minH={"60px"} alignItems={"center"}>
+        <MainIcon />
+        <IconButton
+          marginLeft={"auto"}
+          display={{ base: "flex", sm: "none" }}
+          onClick={onToggle}
+          icon={
+            isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
+          }
+          variant={"ghost"}
+          aria-label={"Toggle Navigation"}
+        />
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
@@ -72,59 +64,14 @@ export default function Navbar() {
 }
 
 const DesktopNav = () => {
-  const linkColor = "fc";
-  const linkHoverColor = "fc";
-  const popoverContentBgColor = "white";
-
   return (
     <Stack direction={"row"}>
-      <Stack direction={"row"} spacing={4} border={"2px"} borderRadius={"5"}>
-        {NAV_ITEMS.map((navItem) => (
-          <Box key={navItem.label}>
-            <Popover trigger={"hover"} placement={"bottom-start"}>
-              <PopoverTrigger>
-                <Center>
-                  <Box
-                    as="a"
-                    p={2}
-                    href={navItem.href ?? "#"}
-                    fontSize={"sm"}
-                    fontWeight={600}
-                    color={linkColor}
-                    _hover={{
-                      textDecoration: "none",
-                      color: linkHoverColor,
-                    }}
-                  >
-                    {navItem.label}
-                  </Box>
-                </Center>
-              </PopoverTrigger>
-
-              {navItem.children && (
-                <PopoverContent
-                  border={"2px"}
-                  boxShadow={"xl"}
-                  bg={popoverContentBgColor}
-                  p={4}
-                  rounded={"xl"}
-                  minW={"sm"}
-                >
-                  <Stack>
-                    {navItem.children.map((child) => (
-                      <DesktopSubNav key={child.label} {...child} />
-                    ))}
-                  </Stack>
-                </PopoverContent>
-              )}
-            </Popover>
-          </Box>
-        ))}
-      </Stack>
+      <DesktopNavBox />
       <Button
         as={"a"}
         minH={"41px"}
         fontSize={"sm"}
+        boxShadow={"xl"}
         fontWeight={600}
         color={"black"}
         border={"2px"}
@@ -136,6 +83,64 @@ const DesktopNav = () => {
       >
         Sign Up
       </Button>
+    </Stack>
+  );
+};
+
+const DesktopNavBox = () => {
+  const linkColor = "fc";
+  const linkHoverColor = "fc";
+  const popoverContentBgColor = "white";
+
+  return (
+    <Stack
+      direction={"row"}
+      spacing={4}
+      border={"2px"}
+      borderRadius={"5"}
+      boxShadow={"xl"}
+    >
+      {NAV_ITEMS.map((navItem) => (
+        <Box key={navItem.label}>
+          <Popover trigger={"hover"} placement={"bottom-start"}>
+            <PopoverTrigger>
+              <Center>
+                <Box
+                  as="a"
+                  p={2}
+                  href={navItem.href ?? "#"}
+                  fontSize={"sm"}
+                  fontWeight={600}
+                  color={linkColor}
+                  _hover={{
+                    textDecoration: "none",
+                    color: linkHoverColor,
+                  }}
+                >
+                  {navItem.label}
+                </Box>
+              </Center>
+            </PopoverTrigger>
+
+            {navItem.children && (
+              <PopoverContent
+                border={"2px"}
+                boxShadow={"xl"}
+                bg={popoverContentBgColor}
+                p={4}
+                rounded={"xl"}
+                minW={"sm"}
+              >
+                <Stack>
+                  {navItem.children.map((child) => (
+                    <DesktopSubNav key={child.label} {...child} />
+                  ))}
+                </Stack>
+              </PopoverContent>
+            )}
+          </Popover>
+        </Box>
+      ))}
     </Stack>
   );
 };
@@ -180,7 +185,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
 
 const MobileNav = () => {
   return (
-    <Stack bg={"fc"} p={4} display={{ md: "none" }}>
+    <Stack bg={"fc"} p={4} display={{ sm: "none" }}>
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
       ))}
